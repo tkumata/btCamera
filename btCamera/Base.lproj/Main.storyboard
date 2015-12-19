@@ -1,25 +1,186 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D9c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="FIi-sh-jug"/>
+                        <viewControllerLayoutGuide type="bottom" id="X0b-dn-Gsk"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcR-Wk-qNb">
+                                <rect key="frame" x="20" y="28" width="280" height="60"/>
+                                <state key="normal" title="Start Camera"/>
+                                <connections>
+                                    <action selector="startCameraButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1X4-DG-fzs"/>
+                                    <segue destination="oCl-jy-s1c" kind="modal" id="M9H-aN-pRS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aej-ae-Nhu">
+                                <rect key="frame" x="20" y="96" width="280" height="60"/>
+                                <state key="normal" title="Find device as shutter"/>
+                                <connections>
+                                    <action selector="findShutterDevice:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bCB-Ql-D5J"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tVk-hs-U5B">
+                                <rect key="frame" x="20" y="164" width="280" height="60"/>
+                                <state key="normal" title="Camera Configuration"/>
+                                <connections>
+                                    <action selector="configButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JsI-Wy-4QO"/>
+                                    <segue destination="Spl-A0-hAB" kind="modal" identifier="config" id="vdf-M9-gXA"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzR-mJ-G2J">
+                                <rect key="frame" x="20" y="506" width="280" height="42"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tVk-hs-U5B" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="CMB-04-uJZ"/>
+                            <constraint firstItem="tVk-hs-U5B" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="E30-4O-sdM"/>
+                            <constraint firstItem="gcR-Wk-qNb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="EIS-Y8-mpe"/>
+                            <constraint firstItem="X0b-dn-Gsk" firstAttribute="top" secondItem="bzR-mJ-G2J" secondAttribute="bottom" constant="20" id="Xna-zU-ZiR"/>
+                            <constraint firstItem="bzR-mJ-G2J" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="ccv-fc-2FT"/>
+                            <constraint firstItem="gcR-Wk-qNb" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="fIb-45-gAD"/>
+                            <constraint firstItem="bzR-mJ-G2J" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="gEY-xS-rYA"/>
+                            <constraint firstItem="aej-ae-Nhu" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="pih-ur-H7M"/>
+                            <constraint firstItem="aej-ae-Nhu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="qdw-P9-ggq"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="configButtonUI" destination="tVk-hs-U5B" id="ZOa-rq-gIx"/>
+                        <outlet property="connectionStatLabel" destination="bzR-mJ-G2J" id="70b-8b-4kW"/>
+                        <outlet property="findShutterDeviceButtonUI" destination="aej-ae-Nhu" id="ib2-AO-Nvi"/>
+                        <outlet property="startCameraButtonUI" destination="gcR-Wk-qNb" id="j5L-3B-f0f"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="192" y="331"/>
+        </scene>
+        <!--Config View Controller-->
+        <scene sceneID="cK1-C1-Qvf">
+            <objects>
+                <viewController id="Spl-A0-hAB" customClass="ConfigViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Fuo-dl-vXh"/>
+                        <viewControllerLayoutGuide type="bottom" id="GAo-e9-Fau"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="KDT-TK-ApG">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="watermark" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xxc-Qk-LCE">
+                                <rect key="frame" x="20" y="20" width="280" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rfk-pd-VNb">
+                                <rect key="frame" x="20" y="58" width="223" height="42"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="96" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cgU-jb-jkW">
+                                <rect key="frame" x="20" y="158" width="458" height="42"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JXE-y5-vNx">
+                                <rect key="frame" x="251" y="63" width="51" height="31"/>
+                                <connections>
+                                    <action selector="locationSW:" destination="Spl-A0-hAB" eventType="valueChanged" id="Zke-xu-hNS"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Camera Control" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kwv-qg-d35">
+                                <rect key="frame" x="20" y="108" width="223" height="42"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WFs-Qp-T4r">
+                                <rect key="frame" x="20" y="518" width="130" height="30"/>
+                                <state key="normal" title="Finish"/>
+                                <connections>
+                                    <action selector="finishButton:" destination="Spl-A0-hAB" eventType="touchUpInside" id="Rcg-UE-TDk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yAg-yf-Wc4">
+                                <rect key="frame" x="170" y="518" width="130" height="30"/>
+                                <state key="normal" title="Default"/>
+                                <connections>
+                                    <action selector="defaultButton:" destination="Spl-A0-hAB" eventType="touchUpInside" id="lCo-dr-Gf2"/>
+                                </connections>
+                            </button>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="96" minimumValue="96" maximumValue="144" translatesAutoresizingMaskIntoConstraints="NO" id="a6c-RE-9by">
+                                <rect key="frame" x="486" y="164" width="94" height="29"/>
+                                <connections>
+                                    <action selector="fontsizeVC:" destination="Spl-A0-hAB" eventType="valueChanged" id="KO0-wg-Xey"/>
+                                </connections>
+                            </stepper>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pi2-FW-agb">
+                                <rect key="frame" x="251" y="113" width="51" height="31"/>
+                                <connections>
+                                    <action selector="cameraCtrlSW:" destination="Spl-A0-hAB" eventType="valueChanged" id="wen-Se-Vql"/>
+                                </connections>
+                            </switch>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yAg-yf-Wc4" firstAttribute="trailing" secondItem="KDT-TK-ApG" secondAttribute="trailingMargin" id="2Xd-0X-CpZ"/>
+                            <constraint firstItem="WFs-Qp-T4r" firstAttribute="leading" secondItem="KDT-TK-ApG" secondAttribute="leadingMargin" id="CEM-vS-pNJ"/>
+                            <constraint firstItem="yAg-yf-Wc4" firstAttribute="leading" secondItem="WFs-Qp-T4r" secondAttribute="trailing" constant="20" id="DPK-pu-bb9"/>
+                            <constraint firstItem="GAo-e9-Fau" firstAttribute="top" secondItem="WFs-Qp-T4r" secondAttribute="bottom" constant="20" id="WL0-x5-u4p"/>
+                            <constraint firstItem="GAo-e9-Fau" firstAttribute="top" secondItem="yAg-yf-Wc4" secondAttribute="bottom" constant="20" id="u4z-DD-UcF"/>
+                            <constraint firstItem="yAg-yf-Wc4" firstAttribute="leading" secondItem="WFs-Qp-T4r" secondAttribute="trailing" constant="20" id="upm-zc-VWS"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraCtrlSWUI" destination="pi2-FW-agb" id="PNK-8e-QwS"/>
+                        <outlet property="defaultButtonUI" destination="yAg-yf-Wc4" id="JRJ-gX-06G"/>
+                        <outlet property="finishButtonUI" destination="WFs-Qp-T4r" id="vp5-QZ-wGG"/>
+                        <outlet property="fontsizeLabel" destination="cgU-jb-jkW" id="JeW-Tj-bbl"/>
+                        <outlet property="fontsizeVCUI" destination="a6c-RE-9by" id="4yF-rQ-nP3"/>
+                        <outlet property="locationSWUI" destination="JXE-y5-vNx" id="Dza-vz-Ydp"/>
+                        <outlet property="watermarkTF" destination="xxc-Qk-LCE" id="ewQ-c2-Uo7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ou9-8d-bch" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="640" y="673"/>
+        </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="pRY-Pr-qxo">
+            <objects>
+                <viewController id="oCl-jy-s1c" customClass="CameraViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tLp-CH-DdB"/>
+                        <viewControllerLayoutGuide type="bottom" id="Rke-ec-LUO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aAa-zh-YeO">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vOR-HV-SiU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="641" y="25"/>
         </scene>
     </scenes>
 </document>

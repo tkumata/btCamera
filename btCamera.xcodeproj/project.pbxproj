@@ -13,6 +13,11 @@
 		896FDABE1C23784600F6B689 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 896FDABC1C23784600F6B689 /* Main.storyboard */; };
 		896FDAC01C23784600F6B689 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 896FDABF1C23784600F6B689 /* Assets.xcassets */; };
 		896FDAC31C23784600F6B689 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 896FDAC11C23784600F6B689 /* LaunchScreen.storyboard */; };
+		896FDACB1C23785F00F6B689 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACA1C23785F00F6B689 /* CoreBluetooth.framework */; };
+		896FDACD1C23786B00F6B689 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACC1C23786B00F6B689 /* CoreLocation.framework */; };
+		896FDACF1C23788400F6B689 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACE1C23788400F6B689 /* MultipeerConnectivity.framework */; };
+		896FDAD21C237A3300F6B689 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 896FDAD11C237A3300F6B689 /* ConfigViewController.m */; };
+		896FDAD51C237B6B00F6B689 /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 896FDAD41C237B6B00F6B689 /* CameraViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +31,13 @@
 		896FDABF1C23784600F6B689 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		896FDAC21C23784600F6B689 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		896FDAC41C23784600F6B689 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		896FDACA1C23785F00F6B689 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		896FDACC1C23786B00F6B689 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		896FDACE1C23788400F6B689 /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
+		896FDAD01C237A3300F6B689 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
+		896FDAD11C237A3300F6B689 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
+		896FDAD31C237B6B00F6B689 /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
+		896FDAD41C237B6B00F6B689 /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +45,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				896FDACF1C23788400F6B689 /* MultipeerConnectivity.framework in Frameworks */,
+				896FDACD1C23786B00F6B689 /* CoreLocation.framework in Frameworks */,
+				896FDACB1C23785F00F6B689 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +57,9 @@
 		896FDAA71C23784600F6B689 = {
 			isa = PBXGroup;
 			children = (
+				896FDACE1C23788400F6B689 /* MultipeerConnectivity.framework */,
+				896FDACC1C23786B00F6B689 /* CoreLocation.framework */,
+				896FDACA1C23785F00F6B689 /* CoreBluetooth.framework */,
 				896FDAB21C23784600F6B689 /* btCamera */,
 				896FDAB11C23784600F6B689 /* Products */,
 			);
@@ -62,6 +80,10 @@
 				896FDAB71C23784600F6B689 /* AppDelegate.m */,
 				896FDAB91C23784600F6B689 /* ViewController.h */,
 				896FDABA1C23784600F6B689 /* ViewController.m */,
+				896FDAD01C237A3300F6B689 /* ConfigViewController.h */,
+				896FDAD11C237A3300F6B689 /* ConfigViewController.m */,
+				896FDAD31C237B6B00F6B689 /* CameraViewController.h */,
+				896FDAD41C237B6B00F6B689 /* CameraViewController.m */,
 				896FDABC1C23784600F6B689 /* Main.storyboard */,
 				896FDABF1C23784600F6B689 /* Assets.xcassets */,
 				896FDAC11C23784600F6B689 /* LaunchScreen.storyboard */,
@@ -150,8 +172,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				896FDAD51C237B6B00F6B689 /* CameraViewController.m in Sources */,
 				896FDABB1C23784600F6B689 /* ViewController.m in Sources */,
 				896FDAB81C23784600F6B689 /* AppDelegate.m in Sources */,
+				896FDAD21C237A3300F6B689 /* ConfigViewController.m in Sources */,
 				896FDAB51C23784600F6B689 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,6 +292,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.kmt.btCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -279,6 +304,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.kmt.btCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -301,6 +327,7 @@
 				896FDAC91C23784600F6B689 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -9,7 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface ViewController : UIViewController
+- (IBAction)startCameraButton:(id)sender;
+- (IBAction)configButton:(id)sender;
+- (IBAction)findShutterDevice:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIButton *startCameraButtonUI;
+@property (weak, nonatomic) IBOutlet UIButton *configButtonUI;
+@property (weak, nonatomic) IBOutlet UIButton *findShutterDeviceButtonUI;
+
+@property (weak, nonatomic) IBOutlet UILabel *connectionStatLabel;
 
 @end
 
