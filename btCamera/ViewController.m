@@ -14,7 +14,10 @@
 
 @interface ViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate>
 {
-    
+    BOOL isConnected;
+    int screenWidth, screenHeight;
+
+    UIButton *shutterButtonUI;
 }
 
 @end
@@ -24,6 +27,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    // MARK: Initial vars
+    screenWidth = self.view.frame.size.width;
+    screenHeight = self.view.frame.size.height;
+
+    // MARK: Parts
+    shutterButtonUI = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    shutterButtonUI.tag = 101;
+    shutterButtonUI.frame = CGRectMake(10, screenHeight-80, screenWidth/3-20, 40);
+    [[shutterButtonUI layer] setBorderWidth:1.0];
+    [[shutterButtonUI layer] setCornerRadius:5.0];
+    [[shutterButtonUI layer] setBorderColor:[[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor]];
+    [[shutterButtonUI layer] setBackgroundColor:[[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor]];
+    [shutterButtonUI setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     // MARK: Attribute
     [[self.startCameraButtonUI layer] setBorderWidth:1.0f];
@@ -98,8 +115,12 @@
 - (void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state {
     if (state == MCSessionStateConnected) {
         self.connectionStatLabel.text = @"Connected";
+        [self.view addSubview:shutterButtonUI];
     } else {
         self.connectionStatLabel.text = @"Disconnected";
+        dispatch_async(dispatch_get_main_queue(),^{
+            [[self.view viewWithTag:101] removeFromSuperview];
+        });
     }
 }
 
@@ -118,15 +139,13 @@
 #pragma mark - Move to Camera VC
 
 - (IBAction)startCameraButton:(id)sender {
-//    CameraViewController *cameraVC = [[CameraViewController alloc] init];
-//    [self presentViewController:cameraVC animated:YES completion:nil];
+    // Blank, OK. Beacuse using segue.
 }
 
 #pragma mark - Move to Config VC
 
 - (IBAction)configButton:(id)sender {
-//    ConfigViewController *configVC = [[ConfigViewController alloc] init];
-//    [self presentViewController:configVC animated:YES completion:nil];
+    // Blank, OK. Beacuse using segue.
 }
 
 #pragma mark - Move to BLE device browse VC
@@ -134,4 +153,5 @@
 - (IBAction)findShutterDevice:(id)sender {
     [self showBrowserVC];
 }
+
 @end

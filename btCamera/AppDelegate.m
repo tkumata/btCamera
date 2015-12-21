@@ -42,4 +42,33 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - self
+
+// Notifies the delegate, when the user taps the done button
+- (void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController {
+}
+
+// Notifies delegate that the user taps the cancel button.
+- (void)browserViewControllerWasCancelled:(MCBrowserViewController *)browserViewController {
+}
+
+- (void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID {
+}
+
+// Remote peer changed state
+- (void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state {
+}
+
+// Received a byte stream from remote peer
+- (void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID {
+}
+
+// Start receiving a resource from remote peer
+- (void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress {
+}
+
+// Finished receiving a resource from remote peer and saved the content in a temporary location - the app is responsible for moving the file to a permanent location within its sandbox
+- (void)session:(MCSession *)session didFinishReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID atURL:(NSURL *)localURL withError:(NSError *)error {
+}
+
 @end
