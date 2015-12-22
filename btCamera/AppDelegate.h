@@ -18,5 +18,7 @@
 @property (nonatomic, strong) MCSession *mySession;
 @property (nonatomic, strong) MCPeerID *myPeerID;
 
+@property BOOL isConnected;
+
 @end
 

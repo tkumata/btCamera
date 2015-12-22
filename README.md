@@ -20,6 +20,10 @@ iOS 端末で写真を撮る時、せっかく固定してもタップにより�
 7. iPhone B の "shutter" ボタンをタップします。
 8. iPhone A でシャッターがきられます。
 
+## Plan
+- 位置情報を保存する。
+- watermark を挿入して保存する。
+
 ## License
 MIT
 

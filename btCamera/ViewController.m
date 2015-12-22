@@ -14,11 +14,13 @@
 
 @interface ViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate>
 {
-    BOOL isConnected;
     int screenWidth, screenHeight;
-
     UIButton *shutterButtonUI;
 }
+@property (nonatomic, strong) MCBrowserViewController *browserVC;
+@property (nonatomic, strong) MCAdvertiserAssistant *advertiser;
+@property (nonatomic, strong) MCSession *mySession;
+@property (nonatomic, strong) MCPeerID *myPeerID;
 
 @end
 
@@ -31,18 +33,21 @@
     // MARK: Initial vars
     screenWidth = self.view.frame.size.width;
     screenHeight = self.view.frame.size.height;
+    self.connectionStatLabel.text = @"Disconnected";
 
-    // MARK: Parts
+    // MARK: Parts of shutter button
     shutterButtonUI = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     shutterButtonUI.tag = 101;
-    shutterButtonUI.frame = CGRectMake(10, screenHeight-80, screenWidth/3-20, 40);
+    shutterButtonUI.frame = CGRectMake(screenWidth/2-screenWidth/4, screenHeight-80, screenWidth/2, 40);
     [[shutterButtonUI layer] setBorderWidth:1.0];
-    [[shutterButtonUI layer] setCornerRadius:5.0];
+    [[shutterButtonUI layer] setCornerRadius:10.0];
     [[shutterButtonUI layer] setBorderColor:[[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor]];
     [[shutterButtonUI layer] setBackgroundColor:[[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor]];
     [shutterButtonUI setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [shutterButtonUI setTitle:@"SHUTTER" forState:UIControlStateNormal];
+    [shutterButtonUI addTarget:self action:@selector(sendData:) forControlEvents:UIControlEventTouchDown];
     
-    // MARK: Attribute
+    // MARK: Attribute of each buttons
     [[self.startCameraButtonUI layer] setBorderWidth:1.0f];
     [[self.startCameraButtonUI layer] setCornerRadius:10.0];
     [[self.startCameraButtonUI layer] setBorderColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor];
@@ -65,20 +70,24 @@
     [userDefaults registerDefaults:udDict];
 
     // MARK: MCSession initialize
-    AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     // Setup peer ID
-    AD.myPeerID = [[MCPeerID alloc] initWithDisplayName:[UIDevice currentDevice].name];
+    self.myPeerID = [[MCPeerID alloc] initWithDisplayName:[UIDevice currentDevice].name];
     // Setup session
-    AD.mySession = [[MCSession alloc] initWithPeer:AD.myPeerID];
+    self.mySession = [[MCSession alloc] initWithPeer:self.myPeerID];
     // Setup BrowserViewController
-    AD.browserVC = [[MCBrowserViewController alloc] initWithServiceType:@"btCamera" session:AD.mySession];
+    self.browserVC = [[MCBrowserViewController alloc] initWithServiceType:@"btCamera" session:self.mySession];
     // Setup Advertiser
-    AD.advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"btCamera" discoveryInfo:nil session:AD.mySession];
+    self.advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"btCamera" discoveryInfo:nil session:self.mySession];
     // Start Adv
-    AD.browserVC.delegate = self;
-    AD.mySession.delegate = self;
-//    [self.advertiser start];
-
+    self.browserVC.delegate = self;
+    self.mySession.delegate = self;
+    [self.advertiser start];
+    
+    AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    AD.myPeerID = self.myPeerID;
+    AD.mySession = self.mySession;
+    AD.browserVC = self.browserVC;
+    AD.advertiser = self.advertiser;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,13 +98,11 @@
 #pragma mark - Bluetooth peering button
 
 - (void) showBrowserVC {
-    AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [self presentViewController:AD.browserVC animated:YES completion:nil];
+    [self presentViewController:self.browserVC animated:YES completion:nil];
 }
 
 - (void) dismissBrowserVC {
-    AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [AD.browserVC dismissViewControllerAnimated:YES completion:nil];
+    [self.browserVC dismissViewControllerAnimated:YES completion:nil];
 }
 
 // Notifies the delegate, when the user taps the done button
@@ -111,14 +118,27 @@
 - (void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID {
 }
 
-// Remote peer changed state
+// MARK: Send shuttering
+- (void)sendData:(id)sender {
+    NSError *error;
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@"aData"];
+    [self.mySession sendData:data toPeers:[self.mySession connectedPeers] withMode:MCSessionSendDataUnreliable error:&error];
+}
+
+// MARK: Peer status
 - (void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state {
     if (state == MCSessionStateConnected) {
-        self.connectionStatLabel.text = @"Connected";
-        [self.view addSubview:shutterButtonUI];
-    } else {
-        self.connectionStatLabel.text = @"Disconnected";
         dispatch_async(dispatch_get_main_queue(),^{
+            AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            AD.isConnected = YES;
+            self.connectionStatLabel.text = @"Connected";
+            [self.view addSubview:shutterButtonUI];
+        });
+    } else {
+        dispatch_async(dispatch_get_main_queue(),^{
+            AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            AD.isConnected = NO;
+            self.connectionStatLabel.text = @"Disconnected";
             [[self.view viewWithTag:101] removeFromSuperview];
         });
     }

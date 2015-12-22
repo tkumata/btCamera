@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcR-Wk-qNb">
-                                <rect key="frame" x="20" y="28" width="280" height="60"/>
+                                <rect key="frame" x="20" y="96" width="280" height="60"/>
                                 <state key="normal" title="Start Camera"/>
                                 <connections>
                                     <action selector="startCameraButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1X4-DG-fzs"/>
@@ -28,18 +28,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aej-ae-Nhu">
-                                <rect key="frame" x="20" y="96" width="280" height="60"/>
+                                <rect key="frame" x="20" y="28" width="280" height="60"/>
                                 <state key="normal" title="Find device as shutter"/>
                                 <connections>
                                     <action selector="findShutterDevice:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bCB-Ql-D5J"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tVk-hs-U5B">
-                                <rect key="frame" x="20" y="164" width="280" height="60"/>
-                                <state key="normal" title="Camera Configuration"/>
-                                <connections>
-                                    <action selector="configButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JsI-Wy-4QO"/>
-                                    <segue destination="Spl-A0-hAB" kind="modal" identifier="config" id="vdf-M9-gXA"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzR-mJ-G2J">
@@ -48,6 +40,14 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tVk-hs-U5B">
+                                <rect key="frame" x="20" y="164" width="280" height="60"/>
+                                <state key="normal" title="Camera Configuration"/>
+                                <connections>
+                                    <action selector="configButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JsI-Wy-4QO"/>
+                                    <segue destination="Spl-A0-hAB" kind="modal" identifier="config" id="vdf-M9-gXA"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -182,6 +182,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vOR-HV-SiU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
