@@ -18,6 +18,7 @@
 		896FDACF1C23788400F6B689 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACE1C23788400F6B689 /* MultipeerConnectivity.framework */; };
 		896FDAD21C237A3300F6B689 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 896FDAD11C237A3300F6B689 /* ConfigViewController.m */; };
 		896FDAD51C237B6B00F6B689 /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 896FDAD41C237B6B00F6B689 /* CameraViewController.m */; };
+		89A48CF71C32075D008636E5 /* IMG_0035.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A48CF61C32075D008636E5 /* IMG_0035.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		896FDAD11C237A3300F6B689 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
 		896FDAD31C237B6B00F6B689 /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
 		896FDAD41C237B6B00F6B689 /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
+		89A48CF61C32075D008636E5 /* IMG_0035.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_0035.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 				896FDABF1C23784600F6B689 /* Assets.xcassets */,
 				896FDAC11C23784600F6B689 /* LaunchScreen.storyboard */,
 				896FDAC41C23784600F6B689 /* Info.plist */,
+				89A48CF51C320740008636E5 /* images */,
 				896FDAB31C23784600F6B689 /* Supporting Files */,
 			);
 			path = btCamera;
@@ -99,6 +102,14 @@
 				896FDAB41C23784600F6B689 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		89A48CF51C320740008636E5 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				89A48CF61C32075D008636E5 /* IMG_0035.png */,
+			);
+			path = images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,6 +173,7 @@
 				896FDAC31C23784600F6B689 /* LaunchScreen.storyboard in Resources */,
 				896FDAC01C23784600F6B689 /* Assets.xcassets in Resources */,
 				896FDABE1C23784600F6B689 /* Main.storyboard in Resources */,
+				89A48CF71C32075D008636E5 /* IMG_0035.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
