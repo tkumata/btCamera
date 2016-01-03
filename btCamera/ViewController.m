@@ -38,27 +38,27 @@
     // MARK: Parts of shutter button
     shutterButtonUI = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     shutterButtonUI.tag = 101;
-    shutterButtonUI.frame = CGRectMake(screenWidth/2-screenWidth/4, screenHeight-80, screenWidth/2, 40);
-    [[shutterButtonUI layer] setBorderWidth:1.0];
-    [[shutterButtonUI layer] setCornerRadius:10.0];
-    [[shutterButtonUI layer] setBorderColor:[[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor]];
-    [[shutterButtonUI layer] setBackgroundColor:[[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor]];
+    shutterButtonUI.frame = CGRectMake(20, screenHeight-90, screenWidth-40, 40);
+    shutterButtonUI.layer.borderWidth = 1.0;
+    shutterButtonUI.layer.cornerRadius = 10.0;
+    shutterButtonUI.layer.borderColor = [[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor];
+    shutterButtonUI.layer.backgroundColor = [[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] CGColor];
     [shutterButtonUI setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [shutterButtonUI setTitle:@"SHUTTER" forState:UIControlStateNormal];
     [shutterButtonUI addTarget:self action:@selector(sendData:) forControlEvents:UIControlEventTouchDown];
     
     // MARK: Attribute of each buttons
-    [[self.startCameraButtonUI layer] setBorderWidth:1.0f];
-    [[self.startCameraButtonUI layer] setCornerRadius:10.0];
-    [[self.startCameraButtonUI layer] setBorderColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor];
+    self.startCameraButtonUI.layer.borderWidth = 1.0;
+    self.startCameraButtonUI.layer.cornerRadius = 10.0;
+    self.startCameraButtonUI.layer.borderColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor;
     
-    [[self.configButtonUI layer] setBorderWidth:1.0f];
-    [[self.configButtonUI layer] setCornerRadius:10.0];
-    [[self.configButtonUI layer] setBorderColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor];
+    self.configButtonUI.layer.borderWidth = 1.0;
+    self.configButtonUI.layer.cornerRadius = 10.0;
+    self.configButtonUI.layer.borderColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor;
     
-    [[self.findShutterDeviceButtonUI layer] setBorderWidth:1.0f];
-    [[self.findShutterDeviceButtonUI layer] setCornerRadius:10.0];
-    [[self.findShutterDeviceButtonUI layer] setBorderColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor];
+    self.findShutterDeviceButtonUI.layer.borderWidth = 1.0;
+    self.findShutterDeviceButtonUI.layer.cornerRadius = 10.0;
+    self.findShutterDeviceButtonUI.layer.borderColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor;
     
     // MARK: user defaults
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -72,15 +72,19 @@
     // MARK: MCSession initialize
     // Setup peer ID
     self.myPeerID = [[MCPeerID alloc] initWithDisplayName:[UIDevice currentDevice].name];
+    
     // Setup session
     self.mySession = [[MCSession alloc] initWithPeer:self.myPeerID];
+    self.mySession.delegate = self;
+    
     // Setup BrowserViewController
     self.browserVC = [[MCBrowserViewController alloc] initWithServiceType:@"btCamera" session:self.mySession];
+    self.browserVC.delegate = self;
+    
     // Setup Advertiser
     self.advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"btCamera" discoveryInfo:nil session:self.mySession];
+    
     // Start Adv
-    self.browserVC.delegate = self;
-    self.mySession.delegate = self;
     [self.advertiser start];
     
     AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -93,6 +97,8 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    self.browserVC.delegate = nil;
+    self.mySession.delegate = nil;
 }
 
 #pragma mark - Bluetooth peering button
@@ -116,13 +122,32 @@
 }
 
 - (void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID {
+    dispatch_async(dispatch_get_main_queue(),^{
+        UIImage *imagedata = [[UIImage alloc] initWithData:data];
+        UIImageView *resultIV = [[UIImageView alloc] init];
+        resultIV.tag = 201;
+        resultIV.frame = CGRectMake(0, 20, screenWidth, screenHeight-120);
+        resultIV.contentMode = UIViewContentModeScaleAspectFill;
+        resultIV.image = imagedata;
+        [self.view addSubview:resultIV];
+        UIImageWriteToSavedPhotosAlbum(imagedata, self, @selector(addDidFinished:didFinishSavingWithError:contentextInfo:), nil);
+        [shutterButtonUI setTitle:@"SHUTTER" forState:UIControlStateNormal];
+    });
+}
+
+// Save Error
+- (void)addDidFinished:(UIImage *)image didFinishSavingWithError:(NSError *)error contentextInfo:(void*)ctxInfo {
 }
 
 // MARK: Send shuttering
 - (void)sendData:(id)sender {
     NSError *error;
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@"aData"];
-    [self.mySession sendData:data toPeers:[self.mySession connectedPeers] withMode:MCSessionSendDataUnreliable error:&error];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@"Tap Shutter"];
+    [self.mySession sendData:data
+                     toPeers:[self.mySession connectedPeers]
+                    withMode:MCSessionSendDataReliable
+                       error:&error];
+    [shutterButtonUI setTitle:@"Receiving data, please wait..." forState:UIControlStateNormal];
 }
 
 // MARK: Peer status
@@ -150,10 +175,12 @@
 
 // Start receiving a resource from remote peer
 - (void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress {
+    // Start resource
 }
 
 // Finished receiving a resource from remote peer and saved the content in a temporary location - the app is responsible for moving the file to a permanent location within its sandbox
 - (void)session:(MCSession *)session didFinishReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID atURL:(NSURL *)localURL withError:(NSError *)error {
+    // Finish resource
 }
 
 #pragma mark - Move to Camera VC

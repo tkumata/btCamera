@@ -38,9 +38,9 @@
     backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     backButton.tag = 101;
     backButton.frame = CGRectMake(10, 28, screenWidth/3, 40);
-    [[backButton layer] setBorderWidth:1.0];
-    [[backButton layer] setCornerRadius:10.0];
-    [[backButton layer] setBorderColor:[[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] CGColor]];
+    backButton.layer.borderWidth = 1.0;
+    backButton.layer.cornerRadius = 10.0;
+    backButton.layer.borderColor = [[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] CGColor];
     //[[backButton layer] setBackgroundColor:[[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] CGColor]];
     //[backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [backButton setTitle:@"Back" forState:UIControlStateNormal];
@@ -57,15 +57,16 @@
     if (AD.isConnected == YES) {
         // Setup peer ID
         self.myPeerID = AD.myPeerID;
+        
         // Setup session
         self.mySession = [[MCSession alloc] initWithPeer:AD.myPeerID];
+        AD.mySession.delegate = self;
+        
         // Setup BrowserViewController
         self.browserVC = [[MCBrowserViewController alloc] initWithServiceType:@"btCamera" session:AD.mySession];
+        
         // Setup Advertiser
         self.advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"btCamera" discoveryInfo:nil session:AD.mySession];
-        
-        AD.browserVC.delegate = self;
-        AD.mySession.delegate = self;
         
         // show camera with delay
         [self performSelector:@selector(showcamera) withObject:nil afterDelay:0.3];
@@ -159,32 +160,36 @@
     originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     
     // Preview picked image
-    UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
-    iv.contentMode = UIViewContentModeScaleAspectFill;
-    iv.image = originalImage;
-    [self.view addSubview:iv];
+//    UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
+//    iv.contentMode = UIViewContentModeScaleAspectFill;
+//    iv.image = originalImage;
+//    [self.view addSubview:iv];
     
     // Stop Camera
     [self dismissViewControllerAnimated:YES completion:nil];
     
+    // Send image to peer device and back to start screen
+    [self sendImage:originalImage peerID:self.myPeerID];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
     // Save to Photos
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Save"
-                                                                             message:@"Do you save this picture?"
-                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"Save"
-                                                        style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction *action) {
-                                                          [self saveBUttonPushed];
-                                                      }]];
-    [alertController addAction:[UIAlertAction actionWithTitle:@"No"
-                                                        style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction *action) {
-                                                          [self cancelButtonPushed];
-                                                      }]];
-    [self presentViewController:alertController animated:YES completion:nil];
+//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Save"
+//                                                                             message:@"Do you save this picture?"
+//                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
+//    [alertController addAction:[UIAlertAction actionWithTitle:@"Save"
+//                                                        style:UIAlertActionStyleDefault
+//                                                      handler:^(UIAlertAction *action) {
+//                                                          [self saveBUttonPushed];
+//                                                      }]];
+//    [alertController addAction:[UIAlertAction actionWithTitle:@"No"
+//                                                        style:UIAlertActionStyleDefault
+//                                                      handler:^(UIAlertAction *action) {
+//                                                          [self cancelButtonPushed];
+//                                                      }]];
+//    [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - Cancel picking image
+#pragma mark - Cancel camera screen
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
@@ -197,15 +202,31 @@
     UIImageWriteToSavedPhotosAlbum(originalImage, self, @selector(addDidFinished:didFinishSavingWithError:contentextInfo:), nil); // normal save
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 // Save Cancel
 - (void)cancelButtonPushed {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-//
+
+// Save Error
 - (void)addDidFinished:(UIImage *)image didFinishSavingWithError:(NSError *)error contentextInfo:(void*)ctxInfo {
-    if (error) {
-        // Do anything needed to handle the error or display it to the user
-    }
+}
+
+#pragma mark - Send image to peer device
+
+- (void)sendImage:(UIImage *)image peerID:(MCPeerID *)peerID {
+    dispatch_async(dispatch_get_main_queue(),^{
+        AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSError *error;
+        NSData *data = UIImageJPEGRepresentation(image, 0.9f);
+        [AD.mySession sendData:data
+                       toPeers:[AD.mySession connectedPeers]
+                      withMode:MCSessionSendDataUnreliable
+                         error:&error];
+        if (error) {
+            NSLog(@"Sending Failed %@", error);
+        }
+    });
 }
 
 #pragma mark - Back

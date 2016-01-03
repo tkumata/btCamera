@@ -13,7 +13,6 @@
 		896FDABE1C23784600F6B689 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 896FDABC1C23784600F6B689 /* Main.storyboard */; };
 		896FDAC01C23784600F6B689 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 896FDABF1C23784600F6B689 /* Assets.xcassets */; };
 		896FDAC31C23784600F6B689 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 896FDAC11C23784600F6B689 /* LaunchScreen.storyboard */; };
-		896FDACB1C23785F00F6B689 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACA1C23785F00F6B689 /* CoreBluetooth.framework */; };
 		896FDACD1C23786B00F6B689 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACC1C23786B00F6B689 /* CoreLocation.framework */; };
 		896FDACF1C23788400F6B689 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACE1C23788400F6B689 /* MultipeerConnectivity.framework */; };
 		896FDAD21C237A3300F6B689 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 896FDAD11C237A3300F6B689 /* ConfigViewController.m */; };
@@ -49,7 +48,6 @@
 			files = (
 				896FDACF1C23788400F6B689 /* MultipeerConnectivity.framework in Frameworks */,
 				896FDACD1C23786B00F6B689 /* CoreLocation.framework in Frameworks */,
-				896FDACB1C23785F00F6B689 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
