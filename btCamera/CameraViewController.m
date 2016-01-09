@@ -10,8 +10,12 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
+#import <CoreLocation/CoreLocation.h>
+#import <ImageIO/ImageIO.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 
-@interface CameraViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate> {
+@interface CameraViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate> {
     int screenWidth, screenHeight;
     UIImagePickerController *imagePickerController;
     UIImage *originalImage;
@@ -21,6 +25,7 @@
 @property (nonatomic, strong) MCAdvertiserAssistant *advertiser;
 @property (nonatomic, strong) MCSession *mySession;
 @property (nonatomic, strong) MCPeerID *myPeerID;
+@property (nonatomic) CLLocationManager *locationManager;
 
 @end
 
@@ -159,6 +164,109 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     
+    // Save location
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    BOOL locationOn = [userDefaults boolForKey:@"location"];
+    
+    if (locationOn == YES) {
+        // Ready for GPS
+        if ([CLLocationManager locationServicesEnabled]) {
+            [self.locationManager setDelegate:self];
+            [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
+            [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        }
+        
+        [self.locationManager startUpdatingLocation];
+        
+        // Location info
+        CLLocation *location = self.locationManager.location;
+        NSMutableDictionary *gpsDict = [NSMutableDictionary new];
+        
+        // GPS Date (UTC)
+        NSDateFormatter *dfGPSDate = [NSDateFormatter new];
+        dfGPSDate.dateFormat = @"yyyy:MM:dd";
+        dfGPSDate.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+        gpsDict[(NSString *)kCGImagePropertyGPSDateStamp] = [dfGPSDate stringFromDate:location.timestamp];
+        
+        // GPS Time (UTC)
+        NSDateFormatter* dfGPSTime = [NSDateFormatter new];
+        dfGPSTime.dateFormat = @"HH:mm:ss.SSSSSS";
+        dfGPSTime.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+        gpsDict[(NSString *)kCGImagePropertyGPSTimeStamp] = [dfGPSTime stringFromDate:location.timestamp];
+        
+        // Latitude
+        CGFloat latitude = location.coordinate.latitude;
+        NSString *gpsLatitudeRef;
+        if (latitude < 0) {
+            latitude = -latitude;
+            gpsLatitudeRef = @"S";
+        } else {
+            gpsLatitudeRef = @"N";
+        }
+        gpsDict[(NSString *)kCGImagePropertyGPSLatitudeRef] = gpsLatitudeRef;
+        gpsDict[(NSString *)kCGImagePropertyGPSLatitude] = @(latitude);
+        
+        // Longitude
+        CGFloat longitude = location.coordinate.longitude;
+        NSString *gpsLongitudeRef;
+        if (longitude < 0) {
+            longitude = -longitude;
+            gpsLongitudeRef = @"W";
+        } else {
+            gpsLongitudeRef = @"E";
+        }
+        gpsDict[(NSString *)kCGImagePropertyGPSLongitudeRef] = gpsLongitudeRef;
+        gpsDict[(NSString *)kCGImagePropertyGPSLongitude] = @(longitude);
+        
+        // Altitude
+        CGFloat altitude = location.altitude;
+        if (!isnan(altitude)) {
+            NSString *gpsAltitudeRef;
+            if (altitude < 0) {
+                altitude = -altitude;
+                gpsAltitudeRef = @"1";
+            } else {
+                gpsAltitudeRef = @"0";
+            }
+            gpsDict[(NSString *)kCGImagePropertyGPSAltitudeRef] = gpsAltitudeRef;
+            gpsDict[(NSString *)kCGImagePropertyGPSAltitude] = @(altitude);
+        }
+        
+        // Speed
+        CGFloat speed = location.speed;
+        if (location.speed >= 0) {
+            gpsDict[(NSString *)kCGImagePropertyGPSSpeedRef] = @"K";
+            gpsDict[(NSString *)kCGImagePropertyGPSSpeed] = @(speed*3.6);
+        }
+        
+        // add GPS info to Exif info
+        NSMutableDictionary *exifDict = [NSMutableDictionary dictionaryWithCapacity:1];
+        [exifDict setObject:originalImage forKey:(NSString *)kCGImagePropertyGPSDictionary];
+        exifDict[(NSString *)kCGImagePropertyGPSDictionary] = (NSDictionary*)gpsDict;
+        
+        // Save image and Exif info with GPS into Photos
+//        ALAssetsLibrary *assetLibrary = [ALAssetsLibrary new];
+//        [assetLibrary writeImageToSavedPhotosAlbum:originalImage.CGImage
+//                                          metadata:exifDict
+//                                   completionBlock:^(NSURL *assetURL, NSError *error) {
+//                                       if (error) {
+//                                           NSLog(@"Save filtered image failed. \n%@", error);
+//                                       }
+//                                   }];
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:originalImage];
+            changeRequest.location = location;
+        } completionHandler:^(BOOL success, NSError *error) {
+            if (success) {
+                
+            } else {
+                
+            }
+        }];
+        
+        [self.locationManager stopUpdatingLocation];
+    }
+    
     // Preview picked image
 //    UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
 //    iv.contentMode = UIViewContentModeScaleAspectFill;
@@ -199,7 +307,7 @@
 
 // Save OK
 - (void)saveBUttonPushed {
-    UIImageWriteToSavedPhotosAlbum(originalImage, self, @selector(addDidFinished:didFinishSavingWithError:contentextInfo:), nil); // normal save
+    UIImageWriteToSavedPhotosAlbum(originalImage, self, @selector(addDidFinished:didFinishSavingWithError:contentextInfo:), nil);
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
