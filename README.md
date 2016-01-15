@@ -28,9 +28,7 @@ iOS 端末で写真を撮る時、せっかく固定してもタップにより�
 
 ## Plan
 
- - 新しい PhotoKit で位置情報を保存する。
  - watermark を挿入して保存する。
- - Camera Control を On/Off できるようにする。
  - 使いやすい UI ... 難しい！
 
 ## License
