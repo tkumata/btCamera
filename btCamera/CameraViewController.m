@@ -12,10 +12,9 @@
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 #import <CoreLocation/CoreLocation.h>
 #import <ImageIO/ImageIO.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 
-@interface CameraViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate> {
+@interface CameraViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate> {
     int screenWidth, screenHeight;
     UIImagePickerController *imagePickerController;
     UIImage *originalImage;
@@ -25,7 +24,7 @@
 @property (nonatomic, strong) MCAdvertiserAssistant *advertiser;
 @property (nonatomic, strong) MCSession *mySession;
 @property (nonatomic, strong) MCPeerID *myPeerID;
-@property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic, retain) CLLocationManager *locationManager;
 
 @end
 
@@ -42,15 +41,20 @@
     // MARK: Part of back button
     backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     backButton.tag = 101;
-    backButton.frame = CGRectMake(10, 28, screenWidth/3, 40);
-    backButton.layer.borderWidth = 1.0;
-    backButton.layer.cornerRadius = 10.0;
-    backButton.layer.borderColor = [[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] CGColor];
-    //[[backButton layer] setBackgroundColor:[[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] CGColor]];
-    //[backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    backButton.frame = CGRectMake(0, screenHeight-40, 60, 40);
     [backButton setTitle:@"Back" forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:backButton];
+    
+    // Ready for GPS
+    if (nil == self.locationManager) {
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+            [self.locationManager requestWhenInUseAuthorization];
+        }
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        self.locationManager.delegate = self;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -74,7 +78,7 @@
         self.advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"btCamera" discoveryInfo:nil session:AD.mySession];
         
         // show camera with delay
-        [self performSelector:@selector(showcamera) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(showcamera) withObject:nil afterDelay:0.4];
     }
 }
 
@@ -116,6 +120,11 @@
 
 // Finished receiving a resource from remote peer and saved the content in a temporary location - the app is responsible for moving the file to a permanent location within its sandbox
 - (void)session:(MCSession *)session didFinishReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID atURL:(NSURL *)localURL withError:(NSError *)error {
+}
+
+#pragma mark - Location update
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 }
 
 #pragma mark - Show camera if connection
@@ -164,137 +173,14 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     
-    // Save location
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    BOOL locationOn = [userDefaults boolForKey:@"location"];
-    
-    if (locationOn == YES) {
-        // Ready for GPS
-        if ([CLLocationManager locationServicesEnabled]) {
-            [self.locationManager setDelegate:self];
-            [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
-            [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-        }
-        
-        [self.locationManager startUpdatingLocation];
-        
-        // Location info
-        CLLocation *location = self.locationManager.location;
-        NSMutableDictionary *gpsDict = [NSMutableDictionary new];
-        
-        // GPS Date (UTC)
-        NSDateFormatter *dfGPSDate = [NSDateFormatter new];
-        dfGPSDate.dateFormat = @"yyyy:MM:dd";
-        dfGPSDate.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-        gpsDict[(NSString *)kCGImagePropertyGPSDateStamp] = [dfGPSDate stringFromDate:location.timestamp];
-        
-        // GPS Time (UTC)
-        NSDateFormatter* dfGPSTime = [NSDateFormatter new];
-        dfGPSTime.dateFormat = @"HH:mm:ss.SSSSSS";
-        dfGPSTime.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-        gpsDict[(NSString *)kCGImagePropertyGPSTimeStamp] = [dfGPSTime stringFromDate:location.timestamp];
-        
-        // Latitude
-        CGFloat latitude = location.coordinate.latitude;
-        NSString *gpsLatitudeRef;
-        if (latitude < 0) {
-            latitude = -latitude;
-            gpsLatitudeRef = @"S";
-        } else {
-            gpsLatitudeRef = @"N";
-        }
-        gpsDict[(NSString *)kCGImagePropertyGPSLatitudeRef] = gpsLatitudeRef;
-        gpsDict[(NSString *)kCGImagePropertyGPSLatitude] = @(latitude);
-        
-        // Longitude
-        CGFloat longitude = location.coordinate.longitude;
-        NSString *gpsLongitudeRef;
-        if (longitude < 0) {
-            longitude = -longitude;
-            gpsLongitudeRef = @"W";
-        } else {
-            gpsLongitudeRef = @"E";
-        }
-        gpsDict[(NSString *)kCGImagePropertyGPSLongitudeRef] = gpsLongitudeRef;
-        gpsDict[(NSString *)kCGImagePropertyGPSLongitude] = @(longitude);
-        
-        // Altitude
-        CGFloat altitude = location.altitude;
-        if (!isnan(altitude)) {
-            NSString *gpsAltitudeRef;
-            if (altitude < 0) {
-                altitude = -altitude;
-                gpsAltitudeRef = @"1";
-            } else {
-                gpsAltitudeRef = @"0";
-            }
-            gpsDict[(NSString *)kCGImagePropertyGPSAltitudeRef] = gpsAltitudeRef;
-            gpsDict[(NSString *)kCGImagePropertyGPSAltitude] = @(altitude);
-        }
-        
-        // Speed
-        CGFloat speed = location.speed;
-        if (location.speed >= 0) {
-            gpsDict[(NSString *)kCGImagePropertyGPSSpeedRef] = @"K";
-            gpsDict[(NSString *)kCGImagePropertyGPSSpeed] = @(speed*3.6);
-        }
-        
-        // add GPS info to Exif info
-        NSMutableDictionary *exifDict = [NSMutableDictionary dictionaryWithCapacity:1];
-        [exifDict setObject:originalImage forKey:(NSString *)kCGImagePropertyGPSDictionary];
-        exifDict[(NSString *)kCGImagePropertyGPSDictionary] = (NSDictionary*)gpsDict;
-        
-        // Save image and Exif info with GPS into Photos
-//        ALAssetsLibrary *assetLibrary = [ALAssetsLibrary new];
-//        [assetLibrary writeImageToSavedPhotosAlbum:originalImage.CGImage
-//                                          metadata:exifDict
-//                                   completionBlock:^(NSURL *assetURL, NSError *error) {
-//                                       if (error) {
-//                                           NSLog(@"Save filtered image failed. \n%@", error);
-//                                       }
-//                                   }];
-        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-            PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:originalImage];
-            changeRequest.location = location;
-        } completionHandler:^(BOOL success, NSError *error) {
-            if (success) {
-                
-            } else {
-                
-            }
-        }];
-        
-        [self.locationManager stopUpdatingLocation];
-    }
-    
-    // Preview picked image
-//    UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
-//    iv.contentMode = UIViewContentModeScaleAspectFill;
-//    iv.image = originalImage;
-//    [self.view addSubview:iv];
-    
-    // Stop Camera
+    // Stop Camera.
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    // Send image to peer device and back to start screen
+    // Send image to peer device and back to start screen.
     [self sendImage:originalImage peerID:self.myPeerID];
-    [self dismissViewControllerAnimated:YES completion:nil];
     
-    // Save to Photos
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Save"
-//                                                                             message:@"Do you save this picture?"
-//                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
-//    [alertController addAction:[UIAlertAction actionWithTitle:@"Save"
-//                                                        style:UIAlertActionStyleDefault
-//                                                      handler:^(UIAlertAction *action) {
-//                                                          [self saveBUttonPushed];
-//                                                      }]];
-//    [alertController addAction:[UIAlertAction actionWithTitle:@"No"
-//                                                        style:UIAlertActionStyleDefault
-//                                                      handler:^(UIAlertAction *action) {
-//                                                          [self cancelButtonPushed];
-//                                                      }]];
-//    [self presentViewController:alertController animated:YES completion:nil];
+    // Back to home screen.
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Cancel camera screen
@@ -303,30 +189,31 @@
     [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Save or cancel picking image
-
-// Save OK
-- (void)saveBUttonPushed {
-    UIImageWriteToSavedPhotosAlbum(originalImage, self, @selector(addDidFinished:didFinishSavingWithError:contentextInfo:), nil);
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-// Save Cancel
-- (void)cancelButtonPushed {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-// Save Error
-- (void)addDidFinished:(UIImage *)image didFinishSavingWithError:(NSError *)error contentextInfo:(void*)ctxInfo {
-}
-
 #pragma mark - Send image to peer device
 
 - (void)sendImage:(UIImage *)image peerID:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(),^{
+        [self.locationManager startUpdatingLocation];
+        
+        // Convert UIImage to NSData.
+        NSData *jpegData = UIImageJPEGRepresentation(image, 1.0f);
+        
+        // Get location.
+        CLLocation *location = self.locationManager.location;
+        // Convert location to serialize.
+        NSData *locationData = [NSKeyedArchiver archivedDataWithRootObject:location];
+        
+        // Create NSMutableArray and add to each NSData.
+        NSMutableArray *concatenatedData = [NSMutableArray array];
+        [concatenatedData insertObject:jpegData atIndex:0];
+        [concatenatedData insertObject:locationData atIndex:1];
+
+        // Convert NSMutableData to serialize.
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:concatenatedData];
+        
+        // Send serialized data to peer devices.
         AppDelegate *AD = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         NSError *error;
-        NSData *data = UIImageJPEGRepresentation(image, 0.9f);
         [AD.mySession sendData:data
                        toPeers:[AD.mySession connectedPeers]
                       withMode:MCSessionSendDataUnreliable
@@ -334,6 +221,8 @@
         if (error) {
             NSLog(@"Sending Failed %@", error);
         }
+        
+        [self.locationManager stopUpdatingLocation];
     });
 }
 

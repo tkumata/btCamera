@@ -16,22 +16,22 @@ iOS 端末で写真を撮る時、せっかく固定してもタップにより�
 
 ## Usage
 
-1. 例えば 2つの iPhone、A と B にこのアプリを導入し、起動します。
-2. iPhone A で "Find device as shutter" をタップします。
-3. するとリスト画面に iPhone B が表示されているはずですので、これをタップします。
-4. iPhone B で接続許可のダイアログが表示されるので Accept をタップします。
-5. iPhone A で "Start Camera" をタップし、カメラ画面に移ります。
-6. 洗濯バサミや三脚などで iPhone A を固定したら、
-7. iPhone B の "shutter" ボタンをタップします。
-8. iPhone A でシャッターがきられます。
-9. 離れた iPhone B に保存されます。
+ 1. 例えば 2つの iPhone、A と B にこのアプリを導入し、起動します。
+ 2. iPhone A で "Find device as shutter" をタップします。
+ 3. するとリスト画面に iPhone B が表示されているはずですので、これをタップします。
+ 4. iPhone B で接続許可のダイアログが表示されるので Accept をタップします。
+ 5. iPhone A で "Start Camera" をタップし、カメラ画面に移ります。
+ 6. 洗濯バサミや三脚などで iPhone A を固定したら、
+ 7. iPhone B の "shutter" ボタンをタップします。
+ 8. iPhone A でシャッターがきられます。
+ 9. 離れた iPhone B に保存されます。(Wi-Fi adhook で直接 iPhone B へ転送されます)
 
 ## Plan
 
-- 位置情報を保存する。
-- watermark を挿入して保存する。
-- Camera Control を On/Off できるようにする。
-- 使いやすい UI ... 難しい！
+ - 新しい PhotoKit で位置情報を保存する。
+ - watermark を挿入して保存する。
+ - Camera Control を On/Off できるようにする。
+ - 使いやすい UI ... 難しい！
 
 ## License
 

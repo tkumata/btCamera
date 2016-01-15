@@ -11,8 +11,10 @@
 #import "ConfigViewController.h"
 #import "CameraViewController.h"
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
+#import <CoreLocation/CoreLocation.h>
+#import <Photos/Photos.h>
 
-@interface ViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate>
+@interface ViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate, CLLocationManagerDelegate>
 {
     int screenWidth, screenHeight;
     UIButton *shutterButtonUI;
@@ -21,6 +23,7 @@
 @property (nonatomic, strong) MCAdvertiserAssistant *advertiser;
 @property (nonatomic, strong) MCSession *mySession;
 @property (nonatomic, strong) MCPeerID *myPeerID;
+@property (nonatomic, retain) CLLocationManager *locationManager;
 
 @end
 
@@ -33,6 +36,7 @@
     // MARK: Initial vars
     screenWidth = self.view.frame.size.width;
     screenHeight = self.view.frame.size.height;
+//    NSLog(@"screeHeight: %d px", screenHeight);
     self.connectionStatLabel.text = @"Disconnected";
 
     // MARK: Parts of shutter button
@@ -64,8 +68,6 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *udDict = [NSMutableDictionary dictionary];
     [udDict setObject:@"(c) watermark" forKey:@"watermark"];
-    [udDict setObject:@"YES" forKeyedSubscript:@"location"];
-    [udDict setObject:@"NO" forKey:@"cameraCtrl"];
     [udDict setObject:@"96" forKey:@"fontSize"];
     [userDefaults registerDefaults:udDict];
 
@@ -123,14 +125,40 @@
 
 - (void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(),^{
-        UIImage *imagedata = [[UIImage alloc] initWithData:data];
+        // Convert received data serialize to unserialise.
+        NSMutableArray *concatenatedData = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        
+        // Get NSData(jpeg) from concatenatedData.
+        NSData *jpegNSData = concatenatedData[0];
+        // Convert NSData to UIImage.
+        UIImage *image = [[UIImage alloc] initWithData:jpegNSData];
+        
+        // Get NSData(location) from concatenatedData.
+        NSData *locationNSData = concatenatedData[1];
+        // Convert NSData to CLLocation.
+        CLLocation *location = [NSKeyedUnarchiver unarchiveObjectWithData:locationNSData];
+        
+        // Preview received image.
         UIImageView *resultIV = [[UIImageView alloc] init];
         resultIV.tag = 201;
-        resultIV.frame = CGRectMake(0, 20, screenWidth, screenHeight-120);
-        resultIV.contentMode = UIViewContentModeScaleAspectFill;
-        resultIV.image = imagedata;
+        resultIV.frame = CGRectMake(0, screenHeight/2-30, screenWidth, screenHeight/2-80);
+        resultIV.contentMode = UIViewContentModeScaleAspectFit;
+        resultIV.image = image;
         [self.view addSubview:resultIV];
-        UIImageWriteToSavedPhotosAlbum(imagedata, self, @selector(addDidFinished:didFinishSavingWithError:contentextInfo:), nil);
+        
+        // Save to Photos Library
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+            changeRequest.location = location;
+        } completionHandler:^(BOOL success, NSError *error) {
+            if (success) {
+                NSLog(@"Success");
+            } else {
+                NSLog(@"Error");
+            }
+        }];
+        
+//        UIImageWriteToSavedPhotosAlbum(imagedata, self, @selector(addDidFinished:didFinishSavingWithError:contentextInfo:), nil);
         [shutterButtonUI setTitle:@"SHUTTER" forState:UIControlStateNormal];
     });
 }

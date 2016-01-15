@@ -22,10 +22,8 @@
     // MARK: Read settings and apply
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     self.watermarkTF.text = [userDefaults stringForKey:@"watermark"];
-    self.locationSWUI.on = [userDefaults boolForKey:@"location"];
     self.fontsizeLabel.text = [userDefaults stringForKey:@"fontSize"];
     self.fontsizeVCUI.value = self.fontsizeLabel.text.integerValue;
-    self.cameraCtrlSWUI.on = [userDefaults boolForKey:@"cameraCtrl"];
     
     // MARK: Attributes
     [[self.finishButtonUI layer] setBorderWidth:1.0f];
@@ -58,20 +56,12 @@
     self.fontsizeLabel.text = [NSString stringWithFormat:@"%.f", self.fontsizeVCUI.value];
 }
 
-- (IBAction)locationSW:(id)sender {
-}
-
-- (IBAction)cameraCtrlSW:(id)sender {
-}
-
 #pragma mark - Save settings and back screen
 
 - (IBAction)finishButton:(id)sender {
     // Save settings to UserDefaults
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:self.watermarkTF.text forKey:@"watermark"];
-    [userDefaults setBool:self.locationSWUI.on forKey:@"location"];
-    [userDefaults setBool:self.cameraCtrlSWUI.on forKey:@"cameraCtrl"];
     [userDefaults setObject:self.fontsizeLabel.text forKey:@"fontSize"];
     [userDefaults synchronize];
     
@@ -85,8 +75,6 @@
     // Save default settings to UserDefaults
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:@"(c) watermark" forKey:@"watermark"];
-    [userDefaults setBool:YES forKey:@"location"];
-    [userDefaults setBool:NO forKey:@"cameraCtrl"];
     [userDefaults setObject:@"96" forKey:@"fontSize"];
     [userDefaults synchronize];
     
