@@ -26,7 +26,6 @@ iOS 端末で写真を撮る時、せっかく固定してもタップにより�
 
 ## Plan
     - 画面デザイン (操作フローの整理)
-    - Auto Layout ...
     - 写真の転送速度が速かったり (Wi-Fi) 遅かったり (Bluetooth) するのでどうにかしたい。
     - Instant Hot Spot 中にテキスト入力で "Unable to simultaneously satisfy constraints." を直す。(Instant Hot Spot 中は Auto Layout 崩壊する？)
 
