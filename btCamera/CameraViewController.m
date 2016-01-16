@@ -14,7 +14,7 @@
 #import <ImageIO/ImageIO.h>
 #import <Photos/Photos.h>
 
-@interface CameraViewController () <MCBrowserViewControllerDelegate, MCSessionDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate> {
+@interface CameraViewController () <UIImagePickerControllerDelegate, MCBrowserViewControllerDelegate, MCSessionDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate> {
     int screenWidth, screenHeight;
     UIImagePickerController *imagePickerController;
     UIImage *originalImage;
@@ -78,7 +78,7 @@
         self.advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"btCamera" discoveryInfo:nil session:AD.mySession];
         
         // show camera with delay
-        [self performSelector:@selector(showcamera) withObject:nil afterDelay:0.4];
+        [self performSelector:@selector(showcamera) withObject:nil afterDelay:0.1];
     }
 }
 
@@ -162,7 +162,8 @@
         imagePickerController.cameraViewTransform = CGAffineTransformMakeScale(scale, scale);
         
         // Start camera
-        [self presentViewController:imagePickerController animated:YES completion:nil];
+//        [self presentViewController:imagePickerController animated:YES completion:nil];
+        [self.view.window addSubview:imagePickerController.view];
     } else {
         return;
     }
@@ -175,6 +176,7 @@
     
     // Stop Camera.
     [self dismissViewControllerAnimated:YES completion:nil];
+    [imagePickerController.view removeFromSuperview];
     
     // Send image to peer device and back to start screen.
     [self sendImage:originalImage peerID:self.myPeerID];

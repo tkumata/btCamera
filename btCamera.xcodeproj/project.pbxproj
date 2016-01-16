@@ -17,7 +17,6 @@
 		896FDACF1C23788400F6B689 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 896FDACE1C23788400F6B689 /* MultipeerConnectivity.framework */; };
 		896FDAD21C237A3300F6B689 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 896FDAD11C237A3300F6B689 /* ConfigViewController.m */; };
 		896FDAD51C237B6B00F6B689 /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 896FDAD41C237B6B00F6B689 /* CameraViewController.m */; };
-		8989A1871C49A5B90046B4F3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 8989A1861C49A5B90046B4F3 /* README.md */; };
 		89A48CF71C32075D008636E5 /* IMG_0035.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A48CF61C32075D008636E5 /* IMG_0035.png */; };
 /* End PBXBuildFile section */
 
@@ -193,7 +192,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8989A1871C49A5B90046B4F3 /* README.md in Sources */,
 				896FDAD51C237B6B00F6B689 /* CameraViewController.m in Sources */,
 				896FDABB1C23784600F6B689 /* ViewController.m in Sources */,
 				896FDAB81C23784600F6B689 /* AppDelegate.m in Sources */,
