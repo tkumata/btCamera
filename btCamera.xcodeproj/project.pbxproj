@@ -38,8 +38,8 @@
 		896FDAD11C237A3300F6B689 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
 		896FDAD31C237B6B00F6B689 /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
 		896FDAD41C237B6B00F6B689 /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
-		8989A1861C49A5B90046B4F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		89A48CF61C32075D008636E5 /* IMG_0035.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_0035.png; sourceTree = "<group>"; };
+		89BF5A2B1C4A343300709E71 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +58,7 @@
 		896FDAA71C23784600F6B689 = {
 			isa = PBXGroup;
 			children = (
+				89BF5A2B1C4A343300709E71 /* README.md */,
 				896FDACE1C23788400F6B689 /* MultipeerConnectivity.framework */,
 				896FDACC1C23786B00F6B689 /* CoreLocation.framework */,
 				896FDAB21C23784600F6B689 /* btCamera */,
@@ -85,7 +86,6 @@
 				896FDAD11C237A3300F6B689 /* ConfigViewController.m */,
 				896FDAD31C237B6B00F6B689 /* CameraViewController.h */,
 				896FDAD41C237B6B00F6B689 /* CameraViewController.m */,
-				8989A1861C49A5B90046B4F3 /* README.md */,
 				896FDABC1C23784600F6B689 /* Main.storyboard */,
 				896FDABF1C23784600F6B689 /* Assets.xcassets */,
 				896FDAC11C23784600F6B689 /* LaunchScreen.storyboard */,
