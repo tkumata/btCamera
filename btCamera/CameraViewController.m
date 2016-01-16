@@ -48,12 +48,13 @@
     
     // Ready for GPS
     if (nil == self.locationManager) {
+        self.locationManager = [[CLLocationManager alloc] init];
         if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
             [self.locationManager requestWhenInUseAuthorization];
         }
-        self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         self.locationManager.delegate = self;
+        [self.locationManager startUpdatingLocation];
     }
 }
 
@@ -122,7 +123,10 @@
 - (void)session:(MCSession *)session didFinishReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID atURL:(NSURL *)localURL withError:(NSError *)error {
 }
 
-#pragma mark - Location update
+#pragma mark - Location
+
+//-(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation*)newLocation fromLocation:(CLLocation*)oldLocation {
+//}
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 }
@@ -195,8 +199,6 @@
 
 - (void)sendImage:(UIImage *)image peerID:(MCPeerID *)peerID {
     dispatch_async(dispatch_get_main_queue(),^{
-        [self.locationManager startUpdatingLocation];
-        
         // Convert UIImage to NSData.
         NSData *jpegData = UIImageJPEGRepresentation(image, 1.0f);
         
