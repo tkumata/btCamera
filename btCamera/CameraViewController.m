@@ -182,7 +182,13 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     [imagePickerController.view removeFromSuperview];
     
+    // Insert watermark.
+    originalImage = [self drawText:@"dummy text"
+                           inImage:originalImage
+                           atPoint:CGPointMake(originalImage.size.width, originalImage.size.height)];
+    
     // Send image to peer device and back to start screen.
+    // In this step, originalImage is not original.
     [self sendImage:originalImage peerID:self.myPeerID];
     
     // Back to home screen.
@@ -228,6 +234,38 @@
         
         [self.locationManager stopUpdatingLocation];
     });
+}
+
+#pragma mark - Draw watermark
+
+- (UIImage*)drawText:(NSString *)text inImage:(UIImage *)image atPoint:(CGPoint)point {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *watermarkText = [userDefaults stringForKey:@"watermark"];
+    int fontSize = [[userDefaults stringForKey:@"fontSize"] intValue];
+    
+    // Font attribute for watermark text.
+    NSMutableAttributedString *textStyle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", watermarkText]];
+    [textStyle addAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:fontSize],
+                               NSForegroundColorAttributeName:[UIColor colorWithRed:0 green:122/255 blue:1 alpha:1.0f],
+                               NSBackgroundColorAttributeName:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.40f]}
+                       range:NSMakeRange(0, textStyle.length)];
+    
+    // Set CGRect for watermark text.
+    UIGraphicsBeginImageContext(image.size);
+    [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
+    CGRect rect = CGRectMake(point.x - image.size.width/2 - textStyle.size.width/2, point.y - textStyle.size.height, image.size.width, image.size.height);
+    [[UIColor blackColor] set];
+    
+    // add text onto the image
+    [textStyle drawInRect:rect];
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    image = nil;
+    textStyle = nil;
+    
+    return newImage;
 }
 
 #pragma mark - Back

@@ -8,9 +8,9 @@
 
 #import "ConfigViewController.h"
 #import "ViewController.h"
+#import <UIKit/UIKit.h>
 
 @interface ConfigViewController ()
-
 @end
 
 @implementation ConfigViewController
@@ -49,6 +49,11 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
+
 
 #pragma mark - Change font size stepper
 
